@@ -180,10 +180,8 @@
 //                    if($entrega=="<label class='btn-danger'>entregar NO</label>"){
                     echo "<tr class='gradeX'>
                                 <td>".$row->monto."</td>
-                                <td>$ciestudiante</td>
-                                <td>
-                                    ".$this->User->consula('nombre','estudiante','ciestudiante',$ciestudiante)."
-                                </td>";
+                                <td>$row->cedula</td>
+                                <td>$row->nombres $row->apellidos</td>";
                                 $query2=$this->db->query("SELECT * FROM material");
                                 foreach ($query2->result() as $row2){
                                     $idmaterial=$row2->idmaterial;

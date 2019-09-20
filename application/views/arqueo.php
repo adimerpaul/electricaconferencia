@@ -50,25 +50,25 @@
                         $sum=$sum+$row->monto;
                         echo "<tr class='gradeX'>
                                 <td>$con</td>
-                                <td>".$this->User->consula('nombre','estudiante','ciestudiante',$row->ciestudiante)."</td>
+                                <td>$row->nombres $row->apellidos</td>
                                 <td>".substr($row->fecha,0,10)."</td>
                                 <td>".$row->monto."</td>
                             </tr>";
                     }
                 }
-                $query=$this->db->query("SELECT * FROM inscripcion WHERE ci2='".$_SESSION['ci']."' ORDER BY fecha DESC ");
-                foreach ($query->result() as $row){
-                    if(substr( $row->fecha2,0,10)==date("Y-m-d")){
-                        $con=$con+1;
-                        $sum=$sum+$row->monto2;
-                        echo "<tr class='gradeX'>
-                                <td>$con</td>
-                                <td>".$this->User->consula('nombre','estudiante','ciestudiante',$row->ciestudiante)."</td>
-                                <td>".substr($row->fecha2,0,10)."</td>
-                                <td>".$row->monto2."</td>
-                            </tr>";
-                    }
-                }
+//                $query=$this->db->query("SELECT * FROM inscripcion WHERE ci2='".$_SESSION['ci']."' ORDER BY fecha DESC ");
+//                foreach ($query->result() as $row){
+//                    if(substr( $row->fecha2,0,10)==date("Y-m-d")){
+//                        $con=$con+1;
+//                        $sum=$sum+$row->monto2;
+//                        echo "<tr class='gradeX'>
+//                                <td>$con</td>
+//                                <td>".$this->User->consula('nombre','estudiante','ciestudiante',$row->ciestudiante)."</td>
+//                                <td>".substr($row->fecha2,0,10)."</td>
+//                                <td>".$row->monto2."</td>
+//                            </tr>";
+//                    }
+//                }
                 ?>
                 </tbody>
             </table>

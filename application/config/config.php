@@ -24,7 +24,7 @@ date_default_timezone_set('America/La_Paz');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/jornadas';
+$config['base_url'] = 'http://localhost/electrica';
 //$config['base_url'] = 'http://regcisaisi.sisinf.edu';
 
 

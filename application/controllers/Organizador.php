@@ -66,12 +66,13 @@ class Organizador extends CI_Controller
     }
 
 
-    public function certificado($nombre,$participacion,$ci){
+    public function certificado($id){
         if($_SESSION['tipo']==""){
             header("Location: ".base_url());
         }
-        $nombre=urldecode($nombre);
-        $participacion=urldecode($participacion);
+        $row=$this->db->query("SELECT * FROM inscripcion WHERE idinscripcion='$id'")->row();
+        $nombre=urldecode($row->nombres.' '.$row->apellidos);
+        $participacion=urldecode('asdas');
         require('fpdf.php');
         $pdf = new FPDF('L','mm','Letter');
         $pdf->AddPage();

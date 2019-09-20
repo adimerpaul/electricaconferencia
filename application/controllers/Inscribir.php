@@ -36,21 +36,19 @@ class Inscribir extends CI_Controller {
         if($_SESSION['tipo']==""){
             header("Location: ".base_url());
         }
-        $ciestudiante=($_POST['ciestudiante']);
-        $nombre=strtoupper($_POST['nombre']);
+        $ci=($_POST['ci']);
+        $nombres=strtoupper($_POST['nombres']);
+        $apellidos=$_POST['apellidos'];
         $celular=$_POST['celular'];
-        $email=$_POST['email'];
-        $codigo=$_POST['codigo'];
-        $tipopago=$_POST['tipopago'];
+        $correo=$_POST['correo'];
+        $ocupacion=$_POST['ocupacion'];
         $tipo="EFECTIVO";
-        $carrera=strtoupper($_POST['carrera']);
-        $material=$_POST['material'];
-        $certificado=$_POST['certificado'];
-        $codigoboleta=$_POST['codigoboleta'];
-        $sede=$_POST['sede'];
-        $estudianteinterno=$_POST['estudianteinterno'];
-        $monto1=$_POST['monto1'];
-        $monto2=$_POST['monto2'];
+        $ciudad=strtoupper($_POST['ciudad']);
+        $facultad=$_POST['facultad'];
+        $carrera=$_POST['carrera'];
+        $mension=$_POST['mension'];
+        $fechanac=$_POST['fechanac'];
+        $monto=$_POST['monto'];
         /*
         try {
             $mi_archivo = 'foto';
@@ -93,22 +91,37 @@ class Inscribir extends CI_Controller {
                 $monto="350";
             }
         }*/
-        $monto1=30;
-        if($estudianteinterno==""){
-        $this->db->query("INSERT INTO estudiante VALUES('$ciestudiante','$nombre','$celular','$email','$codigo','$carrera','$sede')");
-        $this->db->query("INSERT INTO inscripcion(monto,tipo,codigoboleta,material,certificado,ci,ciestudiante,tipopago) VALUES('$monto1','$tipo','$codigoboleta','$material','$certificado','".$_SESSION['ci']."','$ciestudiante','$tipopago')");
-        }else{
-            if ($monto2=="0" || $monto2==""){
-            $this->db->query("UPDATE estudiante SET celular='$celular',correo='$email',codigo='$codigo' WHERE ciestudiante='$ciestudiante'");
-            $query=$this->db->query("SELECT * FROM inscripcion WHERE ciestudiante='$ciestudiante'");
-            if ($query->num_rows()==0){
-                $this->db->query("INSERT INTO inscripcion(monto,tipo,codigoboleta,material,certificado,ci,ciestudiante,tipopago) VALUES('$monto1','$tipo','$codigoboleta','$material','$certificado','".$_SESSION['ci']."','$ciestudiante','$tipopago')");
-            }
-            }else{
-                $this->db->query("UPDATE inscripcion SET monto2='$monto2' WHERE ciestudiante='$ciestudiante'");
-            }
-        }
-        header("Location: ".base_url()."inscribir");
+//        $monto1=30;
+//        if($estudianteinterno==""){
+//        $this->db->query("INSERT INTO estudiante VALUES('$ciestudiante','$nombre','$celular','$email','$codigo','$carrera','$sede')");
+//        $this->db->query("INSERT INTO inscripcion(monto,tipo,codigoboleta,material,certificado,ci,ciestudiante,tipopago) VALUES('$monto1','$tipo','$codigoboleta','$material','$certificado','".$_SESSION['ci']."','$ciestudiante','$tipopago')");
+//        }else{
+//            if ($monto2=="0" || $monto2==""){
+//            $this->db->query("UPDATE estudiante SET celular='$celular',correo='$email',codigo='$codigo' WHERE ciestudiante='$ciestudiante'");
+//            $query=$this->db->query("SELECT * FROM inscripcion WHERE ciestudiante='$ciestudiante'");
+//            if ($query->num_rows()==0){
+//                $this->db->query("INSERT INTO inscripcion(monto,tipo,codigoboleta,material,certificado,ci,ciestudiante,tipopago) VALUES('$monto1','$tipo','$codigoboleta','$material','$certificado','".$_SESSION['ci']."','$ciestudiante','$tipopago')");
+//            }
+//            }else{
+//                $this->db->query("UPDATE inscripcion SET monto2='$monto2' WHERE ciestudiante='$ciestudiante'");
+//            }
+//        }
+        $this->db->query("INSERT INTO inscripcion SET 
+        ci='".$_SESSION['ci']."',
+        nombres='$nombres',
+        cedula='$ci',
+        apellidos='$apellidos',
+        celular='$celular',
+        correo='$correo',
+        ocupacion='$ocupacion',
+        ciudad='$ciudad',
+        facultad='$facultad',
+        carrera='$carrera',
+        mension='$mension',
+        fechanac='$fechanac',
+        monto='$monto'
+        ");
+       header("Location: ".base_url()."inscribir");
     }
     public  function consulta(){
         $mostrar=$_POST['mostrar'];
@@ -168,7 +181,7 @@ class Inscribir extends CI_Controller {
         $row=$query->row();
         $fecha=$row->fecha;
         $ciestudiante=$row->ciestudiante;
-        $nombre=$this->User->consula('nombre','estudiante','ciestudiante',$row->ciestudiante);
+        $nombre=$row->nombres.' '.$row->apellidos;
         $monto=$row->monto;
         $monto2=$row->monto2;
         $codigoboleta=$row->codigoboleta;
@@ -192,9 +205,9 @@ class Inscribir extends CI_Controller {
         $pdf->Ln(3);
         $pdf->Cell(2,0,utf8_decode(''));
         $pdf->Cell(30,0,utf8_decode('FACULTAD NACIONAL DE INGENIERIA'));
-        $pdf->Ln(3);
-        $pdf->Cell(-2,0,utf8_decode(''));
-        $pdf->Cell(30,0,utf8_decode('INGENIERIA DE SISTEMAS E INFORMATICA'));
+//        $pdf->Ln(3);
+//        $pdf->Cell(-2,0,utf8_decode(''));
+//        $pdf->Cell(30,0,utf8_decode('INGENIERIA DE SISTEMAS E INFORMATICA'));
 
 
 
@@ -209,7 +222,7 @@ class Inscribir extends CI_Controller {
         $pdf->SetFont('Arial','B',9);
         $pdf->Cell(25,0,utf8_decode('CI:'));
         $pdf->SetFont('Arial','',9);
-        $pdf->Cell(30,0,utf8_decode($ciestudiante));
+        $pdf->Cell(30,0,utf8_decode($row->cedula));
 
         $pdf->Ln(5);
         $pdf->SetFont('Arial','B',9);
@@ -242,9 +255,9 @@ class Inscribir extends CI_Controller {
 
         $pdf->Ln(4);
         $pdf->SetFont('Arial','B',9);
-        $pdf->MultiCell(0,4,utf8_decode('Por concepto inscripción XIII JORNADAS ACADEMICAS'));
+        $pdf->MultiCell(0,4,utf8_decode('Por concepto inscripción  JORNADAS '));
 
-        barcode('codigos/'.$ciestudiante.'.png', $ciestudiante, 20, 'horizontal', 'code128', true);
+        barcode('codigos/'.$ciestudiante.'.png', $row->cedula, 20, 'horizontal', 'code128', true);
         $pdf->Image('codigos/'.$ciestudiante.'.png',17,59,50,0,'PNG');
         $pdf->Output();
     }

@@ -97,7 +97,7 @@ class Arqueo extends CI_Controller {
             if(substr( $row->fecha,0,10)==date("Y-m-d") ){
                 $pdf->Ln(4);
                 $pdf->SetFont('Arial','',7);
-                $pdf->Cell(55,0,utf8_decode($this->User->consula('nombre','estudiante','ciestudiante',$row->ciestudiante)));
+                $pdf->Cell(55,0,utf8_decode($row->nombres.' '.$row->apellidos));
                 $pdf->SetFont('Arial','',7);
                 $pdf->Cell( 10, 0, utf8_decode($row->monto), 0, 0, 'R' );
                 if($row->tipo=="BOLETA"){

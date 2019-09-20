@@ -8,9 +8,9 @@ $( document ).ready(function() {
 
         //console.log();
         var datos={
-            "mostrar":"nombre",
-            "tabla":"estudiante",
-            "where":"ciestudiante",
+            "mostrar":"nombres",
+            "tabla":"inscripcion",
+            "where":"cedula",
             "dato":ciestudiante
         };
         $.ajax({
@@ -25,7 +25,7 @@ $( document ).ready(function() {
                     $('#credencial').prop('href','Acreditacion/credencial/'+ciestudiante);
                     datos.mostrar="idinscripcion";
                     datos.tabla="inscripcion";
-                    datos.where="ciestudiante";
+                    datos.where="cedula";
                     datos.dato=ciestudiante;
                     $.ajax({
                         url:'inscribir/consulta',

@@ -21,15 +21,18 @@ class Credencial extends CI_Controller{
     $this->load->View("credencial",$data);
     $data['js']="
                 <!-- Specific Page Vendor -->
-                <script src='".base_url()."assets/vendor/select2/select2.js'></script>
-                <script src='".base_url()."assets/vendor/jquery-datatables/media/js/jquery.dataTables.js'></script>
-                <script src='".base_url()."assets/vendor/jquery-datatables/extras/TableTools/js/dataTables.tableTools.min.js'></script>
-                <script src='".base_url()."assets/vendor/jquery-datatables-bs3/assets/js/datatables.js'></script>
-           		<!-- Examples -->
-                <script src='".base_url()."assets/javascripts/tables/examples.datatables.default.js'></script>
-                <script src='".base_url()."assets/javascripts/tables/examples.datatables.row.with.details.js'></script>
-                <script src='".base_url()."assets/javascripts/tables/examples.datatables.tabletools.js'></script>
-                <script src='".base_url()."assets/javascripts/inscribir.js'></script>
+
+                
+                
+                <script src='https://code.jquery.com/jquery-3.3.1.js' ></script>
+                <script src='https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js' ></script>                
+                <script src='https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js' ></script>
+                <script src='https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js' ></script>
+                <script src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js' ></script>
+                <script src='https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js' ></script>
+                <script src='https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js' ></script>
+                <script src='https://cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js' ></script>
+
             ";
     $this->load->View("templates/footer",$data);
 }

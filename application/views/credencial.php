@@ -84,14 +84,13 @@
                     </div>
                 </div>
             </div>
-            <table class="table table-bordered table-striped mb-none" id="datatable-details">
+            <table class="table table-bordered table-striped mb-none" id="datatable">
                 <thead>
                 <tr>
                     
                     <th>Nombre</th>
-                    <th>N</th>
+                    <th>Fecha</th>
                     <th>CI</th>
-                    <th>sede</th>
                     <th>Usuario</th>
                     <th>Opciones</th>
 
@@ -105,16 +104,15 @@
                     $con=$con+1;
                     echo "<tr class='gradeX'>
 
-                                <td>".$this->User->consula('nombre','estudiante','ciestudiante',$row->ciestudiante)."</td>
-                                <td>$con</td>
-                                <td>".$row->ciestudiante." </td>
-                                <td>".$this->User->consula('sede','estudiante','ciestudiante',$row->ciestudiante)."</td>
+                                <td>$row->nombres $row->apellidos</td>
+                                <td>$row->fecha</td>
+                                <td>".$row->cedula." </td>
                                 
                                 <td>".$this->User->consula('nombre','personal','ci',$row->ci)."</td>
                                 <td>
-                                    <a href='".base_url()."Credencial/Boleta/".$row->ciestudiante."' ><li class='btn btn-sm btn-success fa fa-file'></li></a>
-                                    <a href='".base_url()."Organizador/certificado/".$this->User->consula('nombre','estudiante','ciestudiante',$row->ciestudiante)."/ASISTENTE/".$row->ciestudiante." ' ><li class='btn btn-sm btn-warning fa fa-file-o'></li></a>
-                                
+                                    <a href='".base_url()."Credencial/Boleta/".$row->idinscripcion."' ><li class='btn btn-sm btn-success fa fa-file'></li></a>
+                                    <a href='".base_url()."Organizador/certificado/$row->idinscripcion ' ><li class='btn btn-sm btn-warning fa fa-file-o'></li></a>
+                                    
                                  </td>
                             </tr>";
                 }
@@ -182,3 +180,14 @@
         </div>
     </div>
 </div>
+<script>
+    window.onload=function (e) {
+
+            $('#datatable').DataTable( {
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            } );
+    }
+</script>

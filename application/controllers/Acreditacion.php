@@ -28,6 +28,8 @@ class Acreditacion extends CI_Controller {
                 <script src='".base_url()."assets/javascripts/tables/examples.datatables.row.with.details.js'></script>
                 <script src='".base_url()."assets/javascripts/tables/examples.datatables.tabletools.js'></script>
                 <script src='".base_url()."assets/javascripts/acreditacion.js'></script>
+
+                
             ";
         $this->load->View("templates/footer",$data);
     }
@@ -134,7 +136,7 @@ class Acreditacion extends CI_Controller {
 
         $pdf->SetFont('Arial','',9);
 
-        $pdf->Cell(70,5,utf8_decode(($this->User->consula('nombre','estudiante','ciestudiante',$ciestudiante))),'T',0,'C');
+        $pdf->Cell(70,5,utf8_decode(($this->User->consula('nombres','inscripcion','idinscripcion',$idinscripcion).' '.$this->User->consula('apellidos','inscripcion','idinscripcion',$idinscripcion))),'T',0,'C');
         /*$pdf->Ln(1);
         $pdf->SetFont('Arial','B',9);
         $pdf->Cell(10,0,utf8_decode(''));
