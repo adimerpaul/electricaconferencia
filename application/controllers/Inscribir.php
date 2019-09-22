@@ -2,7 +2,8 @@
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 include 'barcode.php';
-
+include('phpqrcode/qrlib.php');
+require_once('php_image_magician.php');
 class Inscribir extends CI_Controller {
 
     public function index()
@@ -36,7 +37,8 @@ class Inscribir extends CI_Controller {
         if($_SESSION['tipo']==""){
             header("Location: ".base_url());
         }
-        $ci=($_POST['ci']);
+        $cedula=($_POST['ci']);
+        $numero=$this->db->query("SELECT * FROM inscritos1")->num_rows()+1;
         $nombres=strtoupper($_POST['nombres']);
         $apellidos=$_POST['apellidos'];
         $celular=$_POST['celular'];
@@ -45,10 +47,22 @@ class Inscribir extends CI_Controller {
         $tipo="EFECTIVO";
         $ciudad=strtoupper($_POST['ciudad']);
         $facultad=$_POST['facultad'];
+        $fechanac=$_POST['fechanac'];
+        $fecha = str_replace("/","-",$fechanac);
+        $cumpleanos = new DateTime($fechanac);
+        $hoy = new DateTime();
+        $edad = $hoy->diff($cumpleanos)->y;
+         $fechai=date('Y-m-d');
         $carrera=$_POST['carrera'];
         $mension=$_POST['mension'];
-        $fechanac=$_POST['fechanac'];
+        $sobrenombre=$nombres.' '.$apellidos;
         $monto=$_POST['monto'];
+        $qr='0';
+        $recibo=$_POST['recibo'];
+        $cargo=$_POST['cargo'];
+        $row=$this->db->query("SELECT qr FROM inscritos1 ORDER BY qr DESC")->row();
+        $qr=$row->qr+5;
+
         /*
         try {
             $mi_archivo = 'foto';
@@ -106,21 +120,34 @@ class Inscribir extends CI_Controller {
 //                $this->db->query("UPDATE inscripcion SET monto2='$monto2' WHERE ciestudiante='$ciestudiante'");
 //            }
 //        }
-        $this->db->query("INSERT INTO inscripcion SET 
+        if ($monto==''){
+            $monto='0';
+        }
+        $this->db->query("INSERT INTO inscritos1 SET 
         ci='".$_SESSION['ci']."',
+        numero='$numero',
         nombres='$nombres',
-        cedula='$ci',
+        cedula='$cedula',
         apellidos='$apellidos',
         celular='$celular',
         correo='$correo',
         ocupacion='$ocupacion',
         ciudad='$ciudad',
         facultad='$facultad',
-        carrera='$carrera',
+        edad='$edad',
+        fechai='$fechai',
+        sobrenombre='$sobrenombre',
+        qr='$qr',
         mension='$mension',
+        recibo='$recibo',
+        cargo='$cargo',
+        carre='$carrera',
+        
         fechanac='$fechanac',
         monto='$monto'
         ");
+
+
        header("Location: ".base_url()."inscribir");
     }
     public  function consulta(){
@@ -132,6 +159,7 @@ class Inscribir extends CI_Controller {
         $row=$query->row();
         echo $row->$mostrar;
     }
+
     public function modificar(){
         $monto=$_POST['monto1'];
         $monto2=$_POST['monto2'];
@@ -177,21 +205,20 @@ class Inscribir extends CI_Controller {
         if($_SESSION['tipo']==""){
             header("Location: ".base_url());
         }
-        $query=$this->db->query("SELECT * FROM inscripcion WHERE idinscripcion='$idinscripcion'");
+        $query=$this->db->query("SELECT * FROM inscritos1 WHERE id='$idinscripcion'");
         $row=$query->row();
         $fecha=$row->fecha;
-        $ciestudiante=$row->ciestudiante;
+        $cedula=$row->cedula;
         $nombre=$row->nombres.' '.$row->apellidos;
         $monto=$row->monto;
-        $monto2=$row->monto2;
-        $codigoboleta=$row->codigoboleta;
+        $codigoboleta=$idinscripcion;
         $personal=$this->User->consula('nombre','personal','ci',$_SESSION['ci']);
 
         require('fpdf.php');
         $pdf = new FPDF('P','mm',array(80,80));
         $pdf->AddPage();
-        $pdf->Image('dist/sistemas.png',2,2,12);
-        $pdf->Image('dist/informatica.png',68,3,9);
+        $pdf->Image('dist/ele.jpeg',2,2,12);
+        $pdf->Image('dist/fni.jpeg',68,3,9);
         $pdf->SetFont('Arial','B',9);
         $pdf->Ln(1);
         $pdf->SetFont('Arial','B',9);
@@ -205,12 +232,6 @@ class Inscribir extends CI_Controller {
         $pdf->Ln(3);
         $pdf->Cell(2,0,utf8_decode(''));
         $pdf->Cell(30,0,utf8_decode('FACULTAD NACIONAL DE INGENIERIA'));
-//        $pdf->Ln(3);
-//        $pdf->Cell(-2,0,utf8_decode(''));
-//        $pdf->Cell(30,0,utf8_decode('INGENIERIA DE SISTEMAS E INFORMATICA'));
-
-
-
 
         $pdf->Ln(5);
         $pdf->SetFont('Arial','B',9);
@@ -233,11 +254,11 @@ class Inscribir extends CI_Controller {
         if ($codigoboleta!="")
         $codigoboleta="N:".$codigoboleta;
 
-        $pdf->Ln(5);
-        $pdf->SetFont('Arial','B',9);
-        $pdf->Cell(25,0,utf8_decode('Aporte:'));
-        $pdf->SetFont('Arial','',9);
-        $pdf->Cell(10,0,utf8_decode($monto." Bs".$codigoboleta));
+//        $pdf->Ln(5);
+//        $pdf->SetFont('Arial','B',9);
+//        $pdf->Cell(25,0,utf8_decode('Aporte:'));
+//        $pdf->SetFont('Arial','',9);
+//        $pdf->Cell(10,0,utf8_decode($monto." Bs".$codigoboleta));
         /*
         $pdf->Ln(5);
         $pdf->SetFont('Arial','B',9);
@@ -254,11 +275,54 @@ class Inscribir extends CI_Controller {
         $pdf->Cell(30,0,utf8_decode($personal));
 
         $pdf->Ln(4);
-        $pdf->SetFont('Arial','B',9);
-        $pdf->MultiCell(0,4,utf8_decode('Por concepto inscripción  JORNADAS '));
+        $pdf->SetFont('Arial','B',7);
+        $pdf->MultiCell(0,4,utf8_decode('Por concepto II CONGRESO NACIONAL DE INGENIERÍA ELÉCTRICA E INGENIERÍA ELECTRÓNICA 2019 '));
 
-        barcode('codigos/'.$ciestudiante.'.png', $row->cedula, 20, 'horizontal', 'code128', true);
-        $pdf->Image('codigos/'.$ciestudiante.'.png',17,59,50,0,'PNG');
+        $pdf->Output();
+    }
+
+    function credencial($id){
+        $row=$this->db->query("SELECT * FROM inscritos1 WHERE id='$id'")->row();
+        require('fpdf.php');
+        $pdf = new FPDF();
+        $nombres=$row->nombres;
+        $apellidos=$row->apellidos;
+        $ci=$row->cedula;
+        $qr=$row->qr;
+        $pdf->AddPage();
+        $pdf->Image('codigos/credencial.jpeg',5,5,198,0,'JPEG');
+
+        //QRcode::png('hello',"hola.png",QR_ECLEVEL_L,10,2);
+        $magicianObj = new imageLib('qr/'.$qr.'.bmp');
+        $magicianObj -> saveImage('qr/1000.png');
+
+        $pdf->Image('qr/1000.png',110,15,25,0);
+
+        $pdf->Ln(3);
+        $pdf->setTextColor(255, 61, 0);
+        $pdf->SetFont('Arial','B',10);
+        $pdf->Cell(120,4,'',0);
+        $pdf->Cell(80,4,utf8_decode('PARTICIPANTE'),0,0,'C');
+        $pdf->setTextColor(0, 0, 0);
+        $pdf->Ln(7);
+        $pdf->SetFont('Arial','B',10);
+        $pdf->Cell(120,4,'',0);
+        $pdf->Cell(80,4,utf8_decode($nombres),0,0,'C');
+        $pdf->Ln(9);
+        $pdf->SetFont('Arial','B',10);
+        $pdf->Cell(120,4,'',0);
+        $pdf->Cell(80,4,utf8_decode($apellidos),0,0,'C');
+        $pdf->Ln(9);
+        $pdf->SetFont('Arial','B',10);
+        $pdf->Cell(120,4,'',0);
+        $pdf->Cell(80,4,utf8_decode($ci),0,0,'C');
+
+        $pdf->Ln(15);
+        $pdf->SetFont('Arial','B',15);
+        $pdf->Cell(101,4,'',0);
+        $pdf->Cell(20,4,utf8_decode($qr),0,0,'C');
+
+
         $pdf->Output();
     }
 

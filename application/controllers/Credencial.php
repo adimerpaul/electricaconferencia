@@ -24,7 +24,6 @@ class Credencial extends CI_Controller{
 
                 
                 
-                <script src='https://code.jquery.com/jquery-3.3.1.js' ></script>
                 <script src='https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js' ></script>                
                 <script src='https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js' ></script>
                 <script src='https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js' ></script>
@@ -63,5 +62,58 @@ public function boleta($ci){
     $pdf->Image('codigos/'.$ci.'.png',20,104,48,0,'PNG');
     $pdf->Output();
 }
+function consulta($id){
+        $query=$this->db->query("SELECT * FROM inscritos1 WHERE id='$id'");
+        echo json_encode($query->result_array());
+}
+    public function modificar(){
+        if($_SESSION['tipo']==""){
+            header("Location: ".base_url());
+        }
+        $cedula=($_POST['ci']);
+        $numero=$this->db->query("SELECT * FROM inscritos1")->num_rows()+1;
+        $nombres=strtoupper($_POST['nombres']);
+        $apellidos=$_POST['apellidos'];
+        $celular=$_POST['celular'];
+        $correo=$_POST['correo'];
+        $ocupacion=$_POST['ocupacion'];
+        $ciudad=strtoupper($_POST['ciudad']);
+        $facultad=$_POST['facultad'];
+        $fechanac=$_POST['fechanac'];
+        $fecha = str_replace("/","-",$fechanac);
+        $cumpleanos = new DateTime($fechanac);
+        $hoy = new DateTime();
+        $edad = $hoy->diff($cumpleanos)->y;
+        $fechai=date('Y-m-d');
+        $carrera=$_POST['carrera'];
+        $mension=$_POST['mension'];
+        $codigo=$_POST['codigo'];
+        $sobrenombre=$nombres.' '.$apellidos;
+//        $monto=$_POST['monto'];
+        $recibo=$_POST['recibo'];
+        $cargo=$_POST['cargo'];
+        $this->db->query("UPDATE inscritos1 SET 
+        ci='".$_SESSION['ci']."',
+        numero='$numero',
+        nombres='$nombres',
+        cedula='$cedula',
+        apellidos='$apellidos',
+        celular='$celular',
+        correo='$correo',
+        ocupacion='$ocupacion',
+        ciudad='$ciudad',
+        facultad='$facultad',
+        edad='$edad',
+        fechai='$fechai',
+        mension='$mension',
+        recibo='$recibo',
+        cargo='$cargo',
+        carre='$carrera',
+        fechanac='$fechanac'
+        WHERE id='$codigo'
+        ");
 
+
+        header("Location: ".base_url()."Credencial");
+    }
 }

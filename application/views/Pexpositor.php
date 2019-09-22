@@ -39,19 +39,19 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <form action="<?=base_url()?>Expositor/registro" method="POST" enctype="multipart/form-data">
+                            <form action="<?=base_url()?>Expositor/insert" method="POST" enctype="multipart/form-data">
                                 <div class="form-group row">
-                                    <label for="nombre" class="col-sm-2 col-form-label">nombre</label>
+                                    <label for="cedula" class="col-sm-2 col-form-label">cedula</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="nombre" placeholder="nombre"  name="nombre">
-                                        
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label for="CI" class="col-sm-2 col-form-label">CI</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="CI" placeholder="CI" required name="CI">
-                                        <small id="mensaje" style="color: red"></small>
+                                        <select class="form-control" id="cedula" placeholder="cedula" required name="cedula">
+                                            <option value="">Seleccionar..</option>
+                                            <?php
+                                            $query=$this->db->query("SELECT * FROM inscritos1 ORDER BY nombres");
+                                            foreach ($query->result() as $row){
+                                                echo "<option value='$row->cedula'>$row->nombres $row->apellidos</option>";
+                                            }
+                                            ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -60,34 +60,24 @@
                                     <div class="col-sm-10">
                                         <select class="form-control" id="tutorial" placeholder="tutorial" required name="tutorial">
                                             <option value="">Seleccionar..</option>
-                                            <option value="MICRO Y NANO TECNOLOGÍA
-PARA EL DESARROLLO DE
-DISPOSITIVOS ELECTRÓNICOS">MICRO Y NANO TECNOLOGÍA
-                                                PARA EL DESARROLLO DE
-                                                DISPOSITIVOS ELECTRÓNICOS</option>
-                                            <option value="EFICIENCIA ENERGÉTICA EN
-INSTALACIONES INDUSTRIALES">EFICIENCIA ENERGÉTICA EN
-                                                INSTALACIONES INDUSTRIALES</option>
-                                            <option value="RUMBO A LAS SMART GRID ">RUMBO A LAS SMART GRID </option>
+                                            <option value="MICRO Y NANO TECNOLOGIA DESARROLLO DE DISPOSITIVOS ELECTRONICOS">MICRO Y NANO TECNOLOGIA DESARROLLO DE DISPOSITIVOS ELECTRONICOS
+                                            </option>
+                                            <option value="EFICIENCIA ENERGETICA EN INSTALACIONES INDUSTRIALES">EFICIENCIA ENERGETICA EN INSTALACIONES INDUSTRIALES
+                                            </option>
+                                            <option value="RUMBO A LA SMART GRID">RUMBO A LA SMART GRID
+                                            </option>
+                                            <option value="MODELAMIENTO DE SISTEMAS DINAMICOS BOND GRAPH">MODELAMIENTO DE SISTEMAS DINAMICOS BOND GRAPH
+                                            </option>
+                                            <option value="OPERACIÓN SATELITAL">OPERACIÓN SATELITAL
+                                            </option>
+                                            <option value="INSTALACION, MANTENIMIENTO, PROGRAMACION Y PARAMETRIZACION">INSTALACION, MANTENIMIENTO, PROGRAMACION Y PARAMETRIZACION …
+                                            </option>
+                                            <option value="ELECTRONICA DIGITAL CON FPGAs">ELECTRONICA DIGITAL CON FPGAs</option>
+                                            <option value="ETAP, USO DE SOFTWARE PARA EL DIMENSIONAMIENTO Y VERIFICACION">ETAP, USO DE SOFTWARE PARA EL DIMENSIONAMIENTO Y VERIFICACION …
+                                            </option>
+                                            <option value="IDENTIFICACION DE SISTEMAS, PROCESOS INDUSTRIALES SISO Y MIMO">IDENTIFICACION DE SISTEMAS, PROCESOS INDUSTRIALES SISO Y MIMO
+                                            </option>
                                         </select>
-                                    </div>
-                                </div>
-                                <div class="form-group row" id="contenedor" style="visibility: hidden">
-                                    <label for="codigoboleta" class="col-sm-2 col-form-label">codigoboleta</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="codigoboleta" placeholder="codigoboleta" name="codigoboleta">
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-2"></div>
-                                    <div class="col-sm-10">
-                                        <a href="fotos/user.jpg" id="contenedorfoto"><img  src="fotos/user.jpg" id="foto"  alt="foto" width="200"></a>
-                                    </div>
-                                </div>
-                                <div class="form-group row" id="contenedor" >
-                                    <label for="codigoboleta" class="col-sm-2 col-form-label">Fotografia</label>
-                                    <div class="col-sm-10">
-                                        <input type="file" class="form-control"  name="foto">
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -103,28 +93,35 @@ INSTALACIONES INDUSTRIALES">EFICIENCIA ENERGÉTICA EN
             <table class="table table-bordered table-striped mb-none" id="datatable-details">
                 <thead>
                 <tr>
-                    <th>Nombre</th>
+                    <th>nombres</th>
                     <th>CI</th>
-                    <th>País</th>
-                    <th>Usuario</th>
+                    <th>celular</th>
+                    <th>Tutorial</th>
+                    <th>Inscrito?</th>
                     <th>Opciones</th>
-
                 </tr>
                 </thead>
                 <tbody>
                 <?php
-                $query=$this->db->query("SELECT * FROM expositor  ");
+                $query=$this->db->query("SELECT * FROM tutoriales  ");
                 foreach ($query->result() as $row){
-
-            
+                    $query2=$this->db->query("SELECT * FROM inscritos1 WHERE cedula='$row->cedula'");
+                    if ($query2->num_rows()==1){
+                        $t="<div class='alert alert-success'>SIinscrito</div> ";
+                        $row2=$query2->row();
+                        $nom=$row2->nombres.' '.$row2->apellidos;
+                    }else{
+                        $t="<div class='alert alert-warning'>NOinscrito</div>";
+                        $nom=$row->nombres;
+                    }
                     echo "<tr class='gradeX'>
-                                <td>".$row->nombre."</td>
-                                <td>".$row->ci_ex." </td>
-                                <td >".$row->pais."</td>
-                                <td>".$this->User->consula('nombre','personal','ci',$row->ci)."</td>
+                                <td>$nom</td>
+                                <td>$row->cedula </td>
+                                <td>$row->celular </td>
+                                <td>$row->tutorial</td>
+                                <td>$t</td>
                                 <td>
-                                    <a href='".base_url()."Expositor/credencial/".$row->ci_ex."' ><li class='btn btn-sm btn-success fa fa-file'></li></a>
-                                    <a href='".base_url()."Organizador/certificado/".$row->nombre."/EXPOSITOR/".$row->ci_ex." ' ><li class='btn btn-sm btn-warning fa fa-file-o'></li></a>
+                                    <a href='".base_url()."Organizador/certificado/".$row->idtutoriales."' ><li class='btn btn-sm btn-warning fa fa-file-o'></li></a>
                                  </td>
                             </tr>";
                 }

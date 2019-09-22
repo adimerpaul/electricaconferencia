@@ -120,51 +120,59 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="correo" class="col-sm-2 col-form-label">correo</label>
-                                    <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="correo" placeholder="correo" required name="correo">
+                                    <label for="correo" class="col-sm-1 col-form-label">correo</label>
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" id="correo" placeholder="correo"  name="correo">
+                                    </div>
+                                    <label for="cargo" class="col-sm-1 col-form-label">cargo</label>
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" id="cargo" placeholder="cargo"  name="cargo">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="ocupacion" class="col-sm-1 col-form-label">ocupacion</label>
                                     <div class="col-sm-5">
-                                        <input type="text" class="form-control" id="ocupacion" placeholder="ocupacion" required name="ocupacion">
+                                        <input type="text" class="form-control" id="ocupacion" placeholder="ocupacion"  name="ocupacion">
                                     </div>
                                     <label for="ciudad" class="col-sm-1 col-form-label">ciudad</label>
                                     <div class="col-sm-5">
-                                        <input type="text" class="form-control" id="ciudad" placeholder="ciudad" required name="ciudad">
+                                        <input type="text" class="form-control" id="ciudad" placeholder="ciudad"  name="ciudad">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="facultad" class="col-sm-1 col-form-label">facultad</label>
                                     <div class="col-sm-5">
-                                        <input type="text" class="form-control" id="facultad" placeholder="facultad" required name="facultad">
+                                        <input type="text" class="form-control" id="facultad" placeholder="facultad"  name="facultad">
                                     </div>
                                     <label for="carrera" class="col-sm-1 col-form-label">carrera</label>
                                     <div class="col-sm-5">
-                                        <input type="text" class="form-control" id="carrera" placeholder="carrera" required name="carrera">
+                                        <input type="text" class="form-control" id="carrera" placeholder="carrera"  name="carrera">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label for="mension" class="col-sm-1 col-form-label">mension</label>
                                     <div class="col-sm-5">
-                                        <input type="text" class="form-control" id="mension" placeholder="mension" required name="mension">
+                                        <input type="text" class="form-control" id="mension" placeholder="mension"  name="mension">
                                     </div>
                                     <label for="fechanac" class="col-sm-1 col-form-label">fechanac</label>
                                     <div class="col-sm-5">
-                                        <input type="date" class="form-control" id="fechanac" placeholder="fechanac" required name="fechanac">
+                                        <input type="date" value="<?=date("Y-m-d")?>" class="form-control" id="fechanac" placeholder="fechanac"  name="fechanac">
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <label for="monto" class="col-sm-2 col-form-label">monto</label>
-                                    <div class="col-sm-10">
-                                        <select  class="form-control" id="monto" placeholder="monto" required name="monto">
+                                    <label for="monto" class="col-sm-1 col-form-label">monto</label>
+                                    <div class="col-sm-5">
+                                        <select  class="form-control" id="monto" placeholder="monto" name="monto">
                                             <option value="">Seleccionar..</option>
                                             <option value="250">250</option>
                                             <option value="300">300</option>
                                             <option value="400">400</option>
                                             <option value="450">450</option>
                                         </select>
+                                    </div>
+                                    <label for="recibo" class="col-sm-1 col-form-label">recibo</label>
+                                    <div class="col-sm-5">
+                                        <input type="text" class="form-control" id="recibo" placeholder="recibo"  name="recibo">
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -183,27 +191,28 @@
                     <th>Estudiante</th>
                     <th>Fecha</th>
                     <th>Monto</th>
-                    <th>User</th>
-                    <th>Recibo</th>
+                    <th>Cedula</th>
+                    <th>Codigo</th>
+                    <th>Credencial</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php
-                $query=$this->db->query("SELECT * FROM inscripcion WHERE ci='".$_SESSION['ci']."' ORDER BY fecha DESC ");
+                $query=$this->db->query("SELECT * FROM inscritos1 ORDER BY fecha DESC ");
                 foreach ($query->result() as $row){
 
                     if(substr( $row->fecha,0,10)==date("Y-m-d"))
                     echo "<tr class='gradeX'>
                                 <td>$row->nombres $row->apellidos</td>
-                                <td>".$row->fecha."</td>
+                                <td>".$row->fechai."</td>
                                 <td>$row->monto</td>
-                                <td>".$this->User->consula('nombre','personal','ci',$row->ci)."</td>
+                                <td>".$row->cedula."</td>
+                                <td>$row->qr</td>
                                 <td>
-                                    <a href='".base_url()."inscribir/boleta/".$row->idinscripcion."' ><li class='btn btn-sm btn-success fa fa-file'></li></a>
+                                    <a target='_blank' href='".base_url()."inscribir/credencial/".$row->id."' ><li class='btn btn-sm btn-success fa fa-print'> Credencial</li></a>
+                                    <a target='_blank' href='".base_url()."inscribir/boleta/".$row->id."' ><li class='btn btn-sm btn-warning fa fa-file'> Boleta</li></a>
                                     <!--li class='btn btn-sm btn-warning fa fa-edit' data-toggle='modal' data-target='#modificar'
-                                    data-monto1='".$row->monto."'
-                                    data-monto2='".$row->monto2."'
-                                    data-ciestudiante='".$row->ciestudiante."'
+                                    
                                     ></li-->
                                  </td>
                             </tr>";

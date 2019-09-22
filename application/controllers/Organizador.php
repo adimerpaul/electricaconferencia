@@ -43,7 +43,7 @@ class Organizador extends CI_Controller
         }
 
         require('fpdf.php');
-        $query=$this->db->query("SELECT * FROM organizador WHERE ci_or='$ci'");
+        $query=$this->db->query("SELECT * FROM inscripcion WHERE ci_or='$ci'");
         $row=$query->row();
         $nombre=$row->nombre;
         $delegacion=$row->comision;
@@ -70,7 +70,7 @@ class Organizador extends CI_Controller
         if($_SESSION['tipo']==""){
             header("Location: ".base_url());
         }
-        $row=$this->db->query("SELECT * FROM inscripcion WHERE idinscripcion='$id'")->row();
+        $row=$this->db->query("SELECT * FROM inscritos1 WHERE id='$id'")->row();
         $nombre=urldecode($row->nombres.' '.$row->apellidos);
         $participacion=urldecode('asdas');
         require('fpdf.php');

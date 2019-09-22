@@ -39,14 +39,11 @@
                 <?php
                 $con=0;
                 $sum=0;
-                $query=$this->db->query("SELECT * FROM inscripcion WHERE ci='".$_SESSION['ci']."' ORDER BY fecha DESC ");
+                $query=$this->db->query("SELECT * FROM inscritos1 WHERE ci='".$_SESSION['ci']."' ORDER BY fecha DESC ");
                 foreach ($query->result() as $row){
                     if(substr( $row->fecha,0,10)==date("Y-m-d") ){
                         $con=$con+1;
 
-                        if($row->tipo=="BOLETA"){
-                            $row->monto=0;
-                        }
                         $sum=$sum+$row->monto;
                         echo "<tr class='gradeX'>
                                 <td>$con</td>

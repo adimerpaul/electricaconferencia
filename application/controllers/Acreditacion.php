@@ -98,8 +98,8 @@ class Acreditacion extends CI_Controller {
         //$delegacion=$row->carrera;
         $pdf = new FPDF('P','mm',array(100,150));
         $pdf->AddPage();
-        $pdf->Image('dist/sistemas.png',5,2,12);
-        $pdf->Image('dist/informatica.png',75,3,9);
+        $pdf->Image('dist/ele.jpeg',5,2,12);
+        $pdf->Image('dist/fni.jpeg',75,3,9);
         $pdf->SetFont('Arial','B',9);
         $pdf->Ln(1);
         $pdf->SetFont('Arial','B',9);
@@ -115,7 +115,7 @@ class Acreditacion extends CI_Controller {
         $pdf->Cell(30,0,utf8_decode('FACULTAD NACIONAL DE INGENIERIA'));
         $pdf->Ln(3);
         $pdf->Cell(-2,0,utf8_decode(''));
-        $pdf->Cell(30,0,utf8_decode('INGENIERIA DE SISTEMAS E INFORMATICA'));
+        $pdf->Cell(30,0,utf8_decode('INGENIERÍA ELÉCTRICA E INGENIERÍA ELECTRÓNICA'));
         //$pdf->Image('fotos/'.$ci.'.jpg',61,47,22);
         $pdf->SetFont('Arial','B',10);
         $pdf->Ln(5);
@@ -125,18 +125,17 @@ class Acreditacion extends CI_Controller {
         $pdf->SetFont('Arial','',10);
         $con=0;
         foreach ($query->result() as $row){
-            if( substr($row->fecha,0,10) ==date("Y-m-d")){
+            //if( substr($row->fecha,0,10) ==date("Y-m-d")){
                 $pdf->Ln(7);
                 $con=$con+1;
                 $pdf->Cell(50,0,$con." .- ".utf8_decode($this->User->consula('nombre','material','idmaterial',$row->idmaterial)),0,0,'L');
-            }
+            //}
         }
         $pdf->Ln(15);
-        $ciestudiante=$this->User->consula('ciestudiante','inscripcion','idinscripcion',$idinscripcion);
-
+        $ciestudiante=$this->User->consula('cedula','inscritos1','id',$idinscripcion);
         $pdf->SetFont('Arial','',9);
 
-        $pdf->Cell(70,5,utf8_decode(($this->User->consula('nombres','inscripcion','idinscripcion',$idinscripcion).' '.$this->User->consula('apellidos','inscripcion','idinscripcion',$idinscripcion))),'T',0,'C');
+        $pdf->Cell(70,5,utf8_decode(($this->User->consula('nombres','inscritos1','id',$idinscripcion).' '.$this->User->consula('apellidos','inscritos1','id',$idinscripcion))),'T',0,'C');
         /*$pdf->Ln(1);
         $pdf->SetFont('Arial','B',9);
         $pdf->Cell(10,0,utf8_decode(''));

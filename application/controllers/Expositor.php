@@ -30,6 +30,21 @@ class Expositor extends CI_Controller {
             ";
         $this->load->View("templates/footer",$data);
     }
+    public function insert(){
+        if($_SESSION['tipo']==""){
+            header("Location: ".base_url());
+        }
+        $cedula=$_POST['cedula'];
+        $tutorial=$_POST['tutorial'];
+        $row=$this->db->query("SELECT * FROM inscritos1 WHERE cedula='$cedula'")->row();
+        $nombres=$row->nombres.' '.$row->apellidos;
+        $celular=$row->celular;
+        $this->db->query("INSERT INTO tutoriales SET  nombres='$nombres',celular='$celular',cedula='$cedula', tutorial='$tutorial'");
+        header("Location: ".base_url()."Expositor");
+    }
+    public function veri(){
+        $this->load->view('veri');
+    }
     public function registro(){
         if($_SESSION['tipo']==""){
             header("Location: ".base_url());

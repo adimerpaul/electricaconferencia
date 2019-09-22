@@ -77,7 +77,7 @@
             <form action="<?=base_url()?>Acreditacion/entrega" method="post">
                 <div class="col-sm-6">
                 <label class="col-sm-4 control-label">Materiales</label>
-                    <input type="text" hidden id="idinscripcion" name="idinscripcion">
+                    <input type="text"  id="idinscripcion" name="idinscripcion">
                 <div class='col-sm-8' id="contenedor">
                     <b>Entrega dia 1</b>
                     <?php
@@ -142,15 +142,15 @@
                                 </tr>";
                 }*/
                 $con=0;
-                $query=$this->db->query("SELECT * FROM inscripcion ");
+                $query=$this->db->query("SELECT * FROM inscritos1 ");
                 foreach ($query->result() as $row){
-                    $ciestudiante=$row->ciestudiante;
-                    $idinscripcion=$row->idinscripcion;
-                    //$codigo=$this->User->consula('codigo','estudiante','ciestudiante',$ciestudiante);
-                    $con=$con+1;
-                    $entrega="";
-                    $sede="";
-                    $suma=($row->monto)+($row->monto2);
+//                    $ciestudiante=$row->ciestudiante;
+                    $idinscripcion=$row->id;
+//                    //$codigo=$this->User->consula('codigo','estudiante','ciestudiante',$ciestudiante);
+//                    $con=$con+1;
+//                    $entrega="";
+//                    $sede="";
+//                    $suma=($row->monto)+($row->monto2);
 //                    if($codigo=="A"){
 //                        $sede="ORURO";
 //                        if($suma<200){
@@ -190,7 +190,7 @@
                                     else $sw="NO";
                                     echo "<td>$sw</td>";
                                 }
-                         echo "<td> <a href='".base_url()."Acreditacion/informe/".$row->idinscripcion."'><i class='btn btn-warning fa fa-file-pdf-o'></i> </a></td>
+                         echo "<td> <a target='_blank' href='".base_url()."Acreditacion/informe/".$row->id."'><i class='btn btn-warning fa fa-file-pdf-o'></i> </a></td>
                                 </tr>";
 //                    }
                 }
@@ -203,3 +203,73 @@
 
     <!-- end: page -->
 </section>
+<script !src="">
+window.onload=function(e){
+    $( document ).ready(function() {
+        $('#formulario').submit(function(event){
+            event.preventDefault();
+            //add stuff here
+        });
+        $('#ciestudiante').keyup(function(event){
+            var ciestudiante=$('#ciestudiante').val()
+            //console.log();
+            var datos={
+                "mostrar":"nombres",
+                "tabla":"inscritos1",
+                "where":"cedula",
+                "dato":ciestudiante
+            };
+            $.ajax({
+                url:'inscribir/consulta',
+                data:datos,
+                type:'POST',
+                success:function (e) {
+                    console.log(e);
+                    if (e.length<40){
+                        $('#mensaje').html(e);
+                        $('#ciestudiante').val('');
+                        $('#foto').prop('src','fotos/'+ciestudiante+'.jpg');
+                        $('#credencial').prop('href','Acreditacion/credencial/'+ciestudiante);
+                        datos.mostrar="id";
+                        datos.tabla="inscritos1";
+                        datos.where="cedula";
+                        datos.dato=ciestudiante;
+                        $.ajax({
+                            url:'inscribir/consulta',
+                            data:datos,
+                            type:'POST',
+                            success:function (e) {
+                                var idinscripcion=e;
+                                $('#idinscripcion').val(idinscripcion);
+                                datos.mostrar="idinscripcion";
+                                datos.tabla="materialinscripcion";
+                                datos.where="idinscripcion";
+                                datos.dato=idinscripcion;
+                                $.ajax({
+                                    url:'inscribir/consulta',
+                                    data:datos,
+                                    type:'POST',
+                                    success:function (e) {
+                                        if(e.length<4){
+                                            $('#verificacion').html('¡¡¡YA ACREDITADO!!!!');
+                                        }else{
+                                            $('#verificacion').html('');
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }else{
+                        $('#mensaje').html('NO encontrado');
+                        $('#foto').prop('src','assets/images/!logged-user.jpg');
+                        $('#verificacion').html('');
+                        $('#idinscripcion').val('');
+                    }
+                }
+            });
+
+        });
+
+    });
+}
+</script>
